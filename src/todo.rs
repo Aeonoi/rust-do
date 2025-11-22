@@ -1,4 +1,8 @@
-use std::{fs::File, io::Write, path::PathBuf};
+use std::{
+    fs::File,
+    io::{Read, Write},
+    path::PathBuf,
+};
 
 /// Appends the string or todo to the file path
 pub fn add(path: PathBuf, todo_str: &[u8]) -> std::io::Result<()> {
@@ -11,9 +15,17 @@ pub fn add(path: PathBuf, todo_str: &[u8]) -> std::io::Result<()> {
 // pub fn remove(path: PathBuf, index: i32) {
 //     todo!()
 // }
-// pub fn list(path: PathBuf) {
-//     todo!()
-// }
+pub fn list(path: PathBuf) -> std::io::Result<()> {
+    let mut f = File::open(&path)?;
+    let mut buf = Vec::new();
+    f.read_to_end(&mut buf)?;
+    for (i, line) in buf.split(|&b| b == b'\n').enumerate() {
+        if !line.is_empty() {
+            println!("[{}]: {}", i + 1, String::from_utf8_lossy(line));
+        }
+    }
+    Ok(())
+}
 // pub fn clear(path: PathBuf) {
 //     todo!()
 // }

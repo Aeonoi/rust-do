@@ -4,7 +4,7 @@ use std::{
     path::PathBuf,
 };
 
-use crate::todo::add;
+use crate::todo::{add, list};
 mod todo;
 
 // checks if the file exists, if not create it
@@ -39,12 +39,24 @@ fn main() {
     }
     // check the number of arguments
     if args.len() == 2 {
-        todo!();
+        let operation = &args[1];
+        match operation.as_str() {
+            "list" => {
+                let path = check_file();
+                match path {
+                    Ok(path_file) => {
+                        let _ = list(path_file);
+                    }
+                    Err(_) => todo!(),
+                }
+            }
+            _ => todo!(),
+        }
     }
     if args.len() == 3 {
-        let opration = &args[1];
+        let operation = &args[1];
         let arg = &args[2];
-        match opration.as_str() {
+        match operation.as_str() {
             "add" => {
                 let path = check_file();
                 match path {
