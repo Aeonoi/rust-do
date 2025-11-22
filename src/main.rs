@@ -3,6 +3,8 @@ use std::{
     fs::{File, exists},
     path::PathBuf,
 };
+
+use crate::todo::add;
 mod todo;
 
 // checks if the file exists, if not create it
@@ -30,13 +32,29 @@ fn check_file() -> std::io::Result<PathBuf> {
 }
 
 fn main() {
-    println!("Hello, world!");
     let args: Vec<String> = env::args().collect();
     // Accepts at least 1 argument
-    // if args.len() == 1 {
-    //     panic!("No arguments provided.");
-    // }
+    if args.len() == 1 {
+        panic!("No arguments provided.");
+    }
     // check the number of arguments
-
-    let _ = check_file();
+    if args.len() == 2 {
+        todo!();
+    }
+    if args.len() == 3 {
+        let opration = &args[1];
+        let arg = &args[2];
+        match opration.as_str() {
+            "add" => {
+                let path = check_file();
+                match path {
+                    Ok(path_file) => {
+                        let _ = add(path_file, arg.as_bytes());
+                    }
+                    Err(_) => todo!(),
+                }
+            }
+            _ => todo!(),
+        }
+    }
 }
