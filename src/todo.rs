@@ -26,9 +26,10 @@ pub fn list(path: PathBuf) -> std::io::Result<()> {
     }
     Ok(())
 }
-// pub fn clear(path: PathBuf) {
-//     todo!()
-// }
+pub fn clear(path: PathBuf) -> std::io::Result<()> {
+    let _ = File::create(path)?;
+    Ok(())
+}
 // pub fn revert(path: PathBuf) {
 //     todo!()
 // }

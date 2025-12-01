@@ -4,7 +4,7 @@ use std::{
     path::PathBuf,
 };
 
-use crate::todo::{add, list};
+use crate::todo::{add, clear, list};
 mod todo;
 
 // checks if the file exists, if not create it
@@ -48,6 +48,17 @@ fn main() {
                         let _ = list(path_file);
                     }
                     Err(_) => todo!(),
+                }
+            }
+            "clear" => {
+                let path = check_file();
+                match path {
+                    Ok(path_file) => {
+                        let _ = clear(path_file);
+                    }
+                    Err(err) => {
+                        println!("Error clearing todo file: {}", err);
+                    }
                 }
             }
             _ => todo!(),
