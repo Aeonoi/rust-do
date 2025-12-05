@@ -1,5 +1,5 @@
 use std::{
-    fs::File,
+    fs::{File, OpenOptions},
     io::{Read, Write},
     path::PathBuf,
 };
@@ -27,7 +27,7 @@ pub fn list(path: PathBuf) -> std::io::Result<()> {
     Ok(())
 }
 pub fn clear(path: PathBuf) -> std::io::Result<()> {
-    let _ = File::create(path)?;
+    let _ = OpenOptions::new().write(true).truncate(true).open(path);
     Ok(())
 }
 // pub fn revert(path: PathBuf) {
