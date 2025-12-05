@@ -15,6 +15,7 @@ Tested with only Linux systems. File path may be different on other OSes.
 
 Improved basic functionality.
 * [ ] 'finish <index>': Marks the todo item at the specified index as completed.
+* [ ] 'remove <array of indexes>': Removes multiple todo items at the specified indexes.
 * [ ] 'list': Lists all the current todo items in a index and checkmark format.
 * [ ] 'remove --search <string>": Removes the first todo item that matches the specified string (fuzzy finds and will displays the result for user to select again with index.
 * [ ] 'save <filename>': Saves the current todo list to the specified filename.
@@ -24,3 +25,6 @@ Improved basic functionality.
 ## Installation
 
 
+## Considerations
+
+* Use write locks and unlocks to ensure that when the application runs, we do not overwrite the file if another instance is using the file. We prioritize the first instance that opened the file.
