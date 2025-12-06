@@ -2,13 +2,13 @@
 
 Tested with only Linux systems. File path may be different on other OSes.
 
-## Possible Arguments:
+## Arguments:
 
 * [ ] '--help or -h': Displays help information about the program.
 * [X] 'add <string>': Appends the specified string to the ``todo`` file.
 * [ ] 'remove <index>': Removes the todo item at the specified index. 
 * [X] 'list': Lists all the current todo items.
-* [ ] 'clear': Clears all todo items from the ``todo`` file.
+* [X] 'clear': Clears all todo items from the ``todo`` file.
 * [ ] 'revert': Reverts the last removal operation, restoring the most recently removed todo item. Will only work if a removal has occurred since the last revert.
 * [ ] 'revert <index>': Reverts the operation done with the index in the history log.
 * [ ] 'history': Loads the history indexed and tells what the operation and the string was
