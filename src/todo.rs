@@ -7,6 +7,7 @@ use std::{
 /// Appends the string or todo to the file path
 pub fn add(path: PathBuf, todo_str: &[u8]) -> std::io::Result<()> {
     let mut buffer = File::options().append(true).open(&path)?;
+    buffer.write(b"* ")?;
     buffer.write(todo_str)?;
     buffer.write(b"\n")?;
     Ok(())
