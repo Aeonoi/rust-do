@@ -167,9 +167,8 @@ impl TodoCreator {
         //     .duration_since(SystemTime::UNIX_EPOCH)
         //     .unwrap()
         //     .as_secs();
-        let todo = "* ".to_owned() + &operation.to_string() + "," + todo_item;
+        let todo = operation.to_string() + "," + todo_item;
         let mut buffer = File::options().append(true).open(&self.todo_history_path)?;
-        buffer.write(b"* ")?;
         buffer.write(todo.as_bytes())?;
         buffer.write(b"\n")?;
         Ok(())
