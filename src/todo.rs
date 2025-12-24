@@ -156,7 +156,15 @@ impl TodoCreator {
     }
 
     pub fn help(&mut self) {
-        todo!()
+        println!(
+            "- 'help': Displays help information about the program.
+- 'add <string>': Appends the specified string to the ``todo`` file.
+- 'remove <index>': Removes the todo item at the specified index.
+- 'list': Lists all the current todo items.
+- 'history': Loads the history indexed and tells what the operation and the todo list was.
+- 'clear': Clears all todo items from the ``todo`` file.
+- 'clear-history': Clears the history log of operations."
+        )
     }
 
     pub fn add_to_history(&mut self, operation: &str, todo_item: &str) -> std::io::Result<()> {

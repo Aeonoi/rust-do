@@ -4,15 +4,16 @@ Tested with only Linux systems. File path may be different on other OSes.
 
 ## Arguments:
 
-* [ ] '--help or -h': Displays help information about the program.
+* [ ] 'help': Displays help information about the program.
 * [X] 'add <string>': Appends the specified string to the ``todo`` file.
 * [X] 'remove <index>': Removes the todo item at the specified index. 
 * [X] 'list': Lists all the current todo items.
 * [X] 'clear': Clears all todo items from the ``todo`` file.
 * [X] 'clear-history': Clears the history log of operations.
+* [X] 'history': Loads the history indexed and tells what the operation and the string was
 
 Improved basic functionality.
-* [ ] 'history': Loads the history indexed and tells what the operation and the string was
+* Use shortened names for operations/commands such as 'rm' for remove, 'ls' for list, etc and add support for flags such as -h for help, -a for add, -r for remove, etc.
 * [ ] 'revert': Reverts the last removal operation, restoring the most recently removed todo item. Will only work if a removal has occurred since the last revert.
 * [ ] 'revert <index>': Reverts the operation done with the index in the history log.
 * [ ] 'finish <index>': Marks the todo item at the specified index as completed.
