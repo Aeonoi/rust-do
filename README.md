@@ -9,6 +9,7 @@ Tested with only Linux systems. File path may be different on other OSes.
 * [X] 'remove <index>': Removes the todo item at the specified index. 
 * [X] 'list': Lists all the current todo items.
 * [X] 'clear': Clears all todo items from the ``todo`` file.
+* [X] 'clear-history': Clears the history log of operations.
 
 Improved basic functionality.
 * [ ] 'history': Loads the history indexed and tells what the operation and the string was

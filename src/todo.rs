@@ -3,6 +3,7 @@ use std::{
     fs::{File, OpenOptions, exists},
     io::{Read, Write},
     path::PathBuf,
+    time::SystemTime,
 };
 
 pub struct TodoCreator {
@@ -56,6 +57,12 @@ impl TodoCreator {
         buffer.write(b"* ")?;
         buffer.write(todo_str)?;
         buffer.write(b"\n")?;
+        let u = str::from_utf8(todo_str);
+        if let Ok(todo_item) = u {
+            let _ = self.add_to_history("add", todo_item);
+        } else {
+            todo!()
+        }
         Ok(())
     }
 
@@ -104,11 +111,18 @@ impl TodoCreator {
         }
         println!("Start: {start}, End: {end}");
 
-        buf.drain(start..end);
+        let removed: Vec<_> = buf.drain(start..end).collect();
 
         // Truncate file and then write into
         let mut new_buffer = File::create(&self.todo_path)?;
         new_buffer.write_all(&buf)?;
+
+        let u = str::from_utf8(&removed);
+        if let Ok(todo_item) = u {
+            let _ = self.add_to_history("remove", todo_item);
+        } else {
+            todo!()
+        }
 
         Ok(())
     }
@@ -127,12 +141,18 @@ impl TodoCreator {
         }
         Ok(())
     }
-    pub fn clear(&mut self) -> std::io::Result<()> {
-        println!("Calling clear");
-        let _ = OpenOptions::new()
-            .write(true)
-            .truncate(true)
-            .open(&self.todo_path);
+    pub fn clear(&mut self, history: bool) -> std::io::Result<()> {
+        if history {
+            let _ = OpenOptions::new()
+                .write(true)
+                .truncate(true)
+                .open(&self.todo_history_path);
+        } else {
+            let _ = OpenOptions::new()
+                .write(true)
+                .truncate(true)
+                .open(&self.todo_path);
+        }
         Ok(())
     }
 
@@ -141,13 +161,18 @@ impl TodoCreator {
     }
 
     pub fn add_to_history(&mut self, operation: &str, todo_item: &str) -> std::io::Result<()> {
-        let buf = operation.to_string() + "," + todo_item;
-        let mut f = File::options()
-            .truncate(false)
-            .create(true)
-            .open(&self.todo_history_path)?;
-        f.write(buf.as_bytes())?;
-        todo!()
+        // All todo items should contain the star(*)
+        // TODO: Add timestamp w/o chrono
+        // let now = SystemTime::now()
+        //     .duration_since(SystemTime::UNIX_EPOCH)
+        //     .unwrap()
+        //     .as_secs();
+        let todo = "* ".to_owned() + &operation.to_string() + "," + todo_item;
+        let mut buffer = File::options().append(true).open(&self.todo_history_path)?;
+        buffer.write(b"* ")?;
+        buffer.write(todo.as_bytes())?;
+        buffer.write(b"\n")?;
+        Ok(())
     }
 }
 

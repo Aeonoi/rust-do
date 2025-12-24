@@ -1,5 +1,4 @@
 use std::env;
-use std::ops::Index;
 use std::str::FromStr;
 
 use crate::todo::TodoCreator;
@@ -21,15 +20,19 @@ fn main() {
         let operation = &args[1];
         match operation.as_str() {
             "list" => match todo_creator.list(false) {
-                Ok(_) => todo!(),
+                Ok(_) => println!("All good!"),
                 Err(err) => panic!("Error: {err}"),
             },
             "history" => match todo_creator.list(true) {
-                Ok(_) => todo!(),
+                Ok(_) => println!("All good!"),
                 Err(err) => panic!("Error: {err}"),
             },
-            "clear" => match todo_creator.clear() {
-                Ok(_) => todo!(),
+            "clear" => match todo_creator.clear(false) {
+                Ok(_) => println!("All good!"),
+                Err(err) => panic!("Error: {err}"),
+            },
+            "clear-history" => match todo_creator.clear(true) {
+                Ok(_) => println!("All good!"),
                 Err(err) => panic!("Error: {err}"),
             },
             "help" => todo_creator.help(),
@@ -51,7 +54,7 @@ fn main() {
                     panic!("Error: {err}")
                 }
                 match todo_creator.remove(index.unwrap()) {
-                    Ok(_) => todo!(),
+                    Ok(_) => println!("All good!"),
                     Err(_) => todo!(),
                 }
             }
