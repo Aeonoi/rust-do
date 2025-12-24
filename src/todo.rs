@@ -3,7 +3,6 @@ use std::{
     fs::{File, OpenOptions, exists},
     io::{Read, Write},
     path::PathBuf,
-    time::SystemTime,
 };
 
 pub struct TodoCreator {
@@ -82,10 +81,6 @@ impl TodoCreator {
         if index < 1 {
             return Err("Index must be greater than 0".into());
         }
-        if index > buf.len() as i64 {
-            // Use template literals to add the size of the buffer
-            return Err("Index must be smaller than size".into());
-        }
 
         let mut lines = 0;
 
@@ -109,7 +104,11 @@ impl TodoCreator {
         if end < start {
             end = buf.len();
         }
-        println!("Start: {start}, End: {end}");
+
+        if index > lines as i64 {
+            // Use template literals to add the size of the buffer
+            return Err("Index must be smaller than size".into());
+        }
 
         let removed: Vec<_> = buf.drain(start..end).collect();
 

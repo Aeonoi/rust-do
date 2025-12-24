@@ -55,7 +55,7 @@ fn main() {
                 }
                 match todo_creator.remove(index.unwrap()) {
                     Ok(_) => println!("All good!"),
-                    Err(_) => todo!(),
+                    Err(err) => panic!("Error: {err}"),
                 }
             }
             _ => todo!(),
