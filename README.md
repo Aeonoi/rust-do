@@ -4,7 +4,7 @@ Tested with only Linux systems. File path may be different on other OSes.
 
 ## Arguments:
 
-* [ ] 'help': Displays help information about the program.
+* [X] 'help': Displays help information about the program.
 * [X] 'add <string>': Appends the specified string to the ``todo`` file.
 * [X] 'remove <index>': Removes the todo item at the specified index. 
 * [X] 'list': Lists all the current todo items.
@@ -26,10 +26,7 @@ Improved basic functionality.
 
 ## Installation
 
+
 ## Testing
 
 Use Docker.
-
-## Considerations
-
-* Use write locks and unlocks to ensure that when the application runs, we do not overwrite the file if another instance is using the file. We prioritize the first instance that opened the file.
