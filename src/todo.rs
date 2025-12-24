@@ -126,6 +126,18 @@ impl TodoCreator {
         Ok(())
     }
 
+    pub fn clean_list(&mut self) -> std::io::Result<()> {
+        let mut f = File::open(&self.todo_path)?;
+        let mut buf = Vec::new();
+        f.read_to_end(&mut buf)?;
+        for (_, line) in buf.split(|&b| b == b'\n').enumerate() {
+            if !line.is_empty() {
+                println!("{}", String::from_utf8_lossy(line));
+            }
+        }
+        Ok(())
+    }
+
     pub fn list(&mut self, history: bool) -> std::io::Result<()> {
         let mut f = File::open(&self.todo_path)?;
         if history {
@@ -140,6 +152,7 @@ impl TodoCreator {
         }
         Ok(())
     }
+
     pub fn clear(&mut self, history: bool) -> std::io::Result<()> {
         if history {
             let _ = OpenOptions::new()

@@ -1,6 +1,6 @@
 # Rust-do
 
-Tested with only Linux systems. File path may be different on other OSes.
+Tested with only Linux systems. File path may be different on other OS.
 
 ## Arguments:
 
@@ -26,7 +26,26 @@ Improved basic functionality.
 
 ## Installation
 
+1. Ensure you have Rust installed. If not, download it from [here](https://www.rust-lang.org/tools/install).
+2. Clone the repository:
+   ```bash
+   git clone https://github.com/Aeonoi/rust-do.git
+   ```
+3. Navigate to the project directory:
+   ```bash
+   cd rust-do
+   ```
+4. Build the project using Cargo:
+   ```bash
+   cargo build --release
+   ```
+5. The compiled binary will be located in the `target/release` directory. You can move it to a directory in your PATH for easier access.
 
-## Testing
-
-Use Docker.
+(Optional) To install directly to your Cargo bin directory, run:
+   ```bash
+   cargo install --path .
+   ```
+For Linux users, it is recommended to place the binary in $HOME/.local/bin for user-specific access.
+   ```bash
+   cp target/release/rust-do $HOME/.local/bin/
+   ```

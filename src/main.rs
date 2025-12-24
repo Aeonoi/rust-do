@@ -16,6 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     if args.len() == 2 {
         match args[1].as_str() {
+            "clean_list" => todo_creator.clean_list()?,
             "list" => todo_creator.list(false)?,
             "history" => todo_creator.list(true)?,
             "clear" => todo_creator.clear(false)?,
