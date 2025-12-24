@@ -2,26 +2,42 @@ use std::{
     env,
     fs::{File, exists},
     path::PathBuf,
+    str::FromStr,
 };
 
-use crate::todo::{add, clear, list};
+use crate::todo::{add, clear, list, remove};
 mod todo;
 
-// checks if the file exists, if not create it
-fn check_file() -> std::io::Result<PathBuf> {
+// checks if the todo file exists, if not create it
+fn check_todo_file() -> std::io::Result<PathBuf> {
     match env::home_dir() {
         Some(path) => {
             let mut new_path = PathBuf::from(path);
             new_path.push("todo");
             match exists(&new_path).expect("Couldn't check for file") {
-                true => {
-                    println!("File path exists");
-                    Ok(new_path)
-                }
+                true => Ok(new_path),
                 // Create path/file if it does not exist
                 false => {
                     let _ = File::create(&new_path)?;
-                    println!("File path created");
+                    Ok(new_path)
+                }
+            }
+        }
+        None => panic!("Impossible to get your home dir! Please set XDG directory"),
+        // None =>
+    }
+}
+
+fn check_todo_history_file() -> std::io::Result<PathBuf> {
+    match env::home_dir() {
+        Some(path) => {
+            let mut new_path = PathBuf::from(path);
+            new_path.push("todo_history");
+            match exists(&new_path).expect("Couldn't check for file") {
+                true => Ok(new_path),
+                // Create path/file if it does not exist
+                false => {
+                    let _ = File::create(&new_path)?;
                     Ok(new_path)
                 }
             }
@@ -38,29 +54,25 @@ fn main() {
         panic!("No arguments provided.");
     }
     // check the number of arguments
+    let todo_path = check_todo_file();
+    let todo_history_path = check_todo_history_file();
     if args.len() == 2 {
         let operation = &args[1];
         match operation.as_str() {
-            "list" => {
-                let path = check_file();
-                match path {
-                    Ok(path_file) => {
-                        let _ = list(path_file);
-                    }
-                    Err(_) => todo!(),
+            "list" => match todo_path {
+                Ok(ref path_file) => {
+                    let _ = list(path_file.to_path_buf());
                 }
-            }
-            "clear" => {
-                let path = check_file();
-                match path {
-                    Ok(path_file) => {
-                        let _ = clear(path_file);
-                    }
-                    Err(err) => {
-                        println!("Error clearing todo file: {}", err);
-                    }
+                Err(_) => todo!(),
+            },
+            "clear" => match todo_path {
+                Ok(ref path_file) => {
+                    let _ = clear(path_file.to_path_buf());
                 }
-            }
+                Err(ref err) => {
+                    println!("Error clearing todo file: {}", err);
+                }
+            },
             _ => todo!(),
         }
     }
@@ -68,15 +80,26 @@ fn main() {
         let operation = &args[1];
         let arg = &args[2];
         match operation.as_str() {
-            "add" => {
-                let path = check_file();
-                match path {
-                    Ok(path_file) => {
-                        let _ = add(path_file, arg.as_bytes());
-                    }
-                    Err(_) => todo!(),
+            "add" => match todo_path {
+                Ok(ref path_file) => {
+                    let _ = add(path_file.to_path_buf(), arg.as_bytes());
                 }
-            }
+                Err(_) => todo!(),
+            },
+            "remove" => match todo_path {
+                Ok(ref path_file) => {
+                    let index = i64::from_str(arg);
+                    match index {
+                        Ok(index_val) => {
+                            let _ = remove(path_file.to_path_buf(), index_val);
+                        }
+                        Err(error) => {
+                            println!("Error: {}", error);
+                        }
+                    }
+                }
+                Err(_) => todo!(),
+            },
             _ => todo!(),
         }
     }
