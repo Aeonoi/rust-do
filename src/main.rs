@@ -1,51 +1,9 @@
-use std::{
-    env,
-    fs::{File, exists},
-    path::PathBuf,
-    str::FromStr,
-};
+use std::env;
+use std::ops::Index;
+use std::str::FromStr;
 
-use crate::todo::{add, clear, list, remove};
+use crate::todo::TodoCreator;
 mod todo;
-
-// checks if the todo file exists, if not create it
-fn check_todo_file() -> std::io::Result<PathBuf> {
-    match env::home_dir() {
-        Some(path) => {
-            let mut new_path = PathBuf::from(path);
-            new_path.push("todo");
-            match exists(&new_path).expect("Couldn't check for file") {
-                true => Ok(new_path),
-                // Create path/file if it does not exist
-                false => {
-                    let _ = File::create(&new_path)?;
-                    Ok(new_path)
-                }
-            }
-        }
-        None => panic!("Impossible to get your home dir! Please set XDG directory"),
-        // None =>
-    }
-}
-
-fn check_todo_history_file() -> std::io::Result<PathBuf> {
-    match env::home_dir() {
-        Some(path) => {
-            let mut new_path = PathBuf::from(path);
-            new_path.push("todo_history");
-            match exists(&new_path).expect("Couldn't check for file") {
-                true => Ok(new_path),
-                // Create path/file if it does not exist
-                false => {
-                    let _ = File::create(&new_path)?;
-                    Ok(new_path)
-                }
-            }
-        }
-        None => panic!("Impossible to get your home dir! Please set XDG directory"),
-        // None =>
-    }
-}
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -53,26 +11,28 @@ fn main() {
     if args.len() == 1 {
         panic!("No arguments provided.");
     }
+    let mut todo_creator = TodoCreator::new();
+    match todo_creator.check_files() {
+        Ok(_) => println!("All good!"),
+        Err(err) => panic!("Error happened: {}", err),
+    }
     // check the number of arguments
-    let todo_path = check_todo_file();
-    let todo_history_path = check_todo_history_file();
     if args.len() == 2 {
         let operation = &args[1];
         match operation.as_str() {
-            "list" => match todo_path {
-                Ok(ref path_file) => {
-                    let _ = list(path_file.to_path_buf());
-                }
-                Err(_) => todo!(),
+            "list" => match todo_creator.list(false) {
+                Ok(_) => todo!(),
+                Err(err) => panic!("Error: {err}"),
             },
-            "clear" => match todo_path {
-                Ok(ref path_file) => {
-                    let _ = clear(path_file.to_path_buf());
-                }
-                Err(ref err) => {
-                    println!("Error clearing todo file: {}", err);
-                }
+            "history" => match todo_creator.list(true) {
+                Ok(_) => todo!(),
+                Err(err) => panic!("Error: {err}"),
             },
+            "clear" => match todo_creator.clear() {
+                Ok(_) => todo!(),
+                Err(err) => panic!("Error: {err}"),
+            },
+            "help" => todo_creator.help(),
             _ => todo!(),
         }
     }
@@ -80,26 +40,21 @@ fn main() {
         let operation = &args[1];
         let arg = &args[2];
         match operation.as_str() {
-            "add" => match todo_path {
-                Ok(ref path_file) => {
-                    let _ = add(path_file.to_path_buf(), arg.as_bytes());
-                }
-                Err(_) => todo!(),
+            "add" => match todo_creator.add(arg.as_bytes()) {
+                Ok(_) => println!("All good!"),
+                Err(err) => panic!("Error: {err}"),
             },
-            "remove" => match todo_path {
-                Ok(ref path_file) => {
-                    let index = i64::from_str(arg);
-                    match index {
-                        Ok(index_val) => {
-                            let _ = remove(path_file.to_path_buf(), index_val);
-                        }
-                        Err(error) => {
-                            println!("Error: {}", error);
-                        }
-                    }
+            "remove" => {
+                let index = i64::from_str(arg);
+                // not convertable to index
+                if let Err(err) = index {
+                    panic!("Error: {err}")
                 }
-                Err(_) => todo!(),
-            },
+                match todo_creator.remove(index.unwrap()) {
+                    Ok(_) => todo!(),
+                    Err(_) => todo!(),
+                }
+            }
             _ => todo!(),
         }
     }
