@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "cli-todo"
+name = "rust-do"
 version = "1.0.0"
