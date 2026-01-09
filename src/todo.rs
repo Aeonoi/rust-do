@@ -32,6 +32,7 @@ impl TodoCreator {
                     // Create path/file if it does not exist
                     false => {
                         let _ = File::create(&todo_path)?;
+                        self.todo_path = todo_path;
                     }
                 }
                 match exists(&todo_history_path).expect("Could not check for todo file") {
@@ -42,11 +43,12 @@ impl TodoCreator {
                     // Create path/file if it does not exist
                     false => {
                         let _ = File::create(&todo_history_path)?;
+                        self.todo_history_path = todo_history_path;
                         Ok(())
                     }
                 }
             }
-            None => panic!("Impossible to get your home dir! Please set XDG directory"),
+            None => panic!("Impossible to get your home dir! Please set HOME directory"),
         }
     }
 

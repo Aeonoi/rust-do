@@ -49,3 +49,13 @@ For Linux users, it is recommended to place the binary in $HOME/.local/bin for u
    ```bash
    cp target/release/rust-do $HOME/.local/bin/
    ```
+
+
+## Docker/Test
+
+Build and run: 
+
+```
+docker build --tag 'rust-do' .
+docker run -it --rm rust-do:latest /bin/bash
+```
